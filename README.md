@@ -1,4 +1,4 @@
-# nuggets.ai_cohere
+# nuggets.ai
 ## An AI Powered News Application using Cohere.ai 
 
 ## Project Overview
