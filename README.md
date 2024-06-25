@@ -70,6 +70,7 @@ Contributions to Nuggets are welcome! Please feel free to submit a Pull Request.
 
 ## Video Demonstration
 Here is a video demonstration of the application in action:
+
 https://github.com/sowmyakuruba20/nuggets.ai_cohere/assets/131414180/ff7af6f1-0966-4fb2-b479-07c60d603177
 
 ### License
