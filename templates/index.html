@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>nuggets.ai</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 20px;
+        }
+        .app-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            background-color: #ffffff;
+            z-index: 1000;
+            padding: 10px 0;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        .logo {
+            height: 50px;
+            width: auto;
+        }
+        .app-name {
+            color: #FED000;
+            font-size: 24px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .search-container {
+            position: relative;
+            width: 400px;
+        }
+        .search-btn {
+            background-color: #ffffff;
+            border: 1px solid #FED000;
+            color: #000000;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 10px 15px;
+            font-size: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        .search-btn i {
+            margin-right: 15px;
+            font-size: 18px;
+        }
+        .search-btn span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        #search-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            padding: 10px 15px 10px 40px;
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            color: #000000;
+        }
+        #search-input:focus {
+            outline: none;
+        }
+        .search-btn:hover, .search-btn:focus, .search-btn:active {
+            background-color: #ffffff;
+            border-color: #E6BC00;
+            color: #E6BC00;
+        }
+        .news-card {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background-color: #ffffff;
+        }
+        .category-btn {
+            margin-right: 10px;
+            margin-bottom: 10px;
+            background-color: #FED000;
+            border-color: #FED000;
+            color: #000000;
+        }
+        .category-btn:hover, .category-btn:focus, .category-btn:active {
+            background-color: #E6BC00;
+            border-color: #E6BC00;
+            color: #000000;
+        }
+        .action-btn {
+            background-color: #FED000;
+            border-color: #FED000;
+            color: #000000;
+            margin-right: 10px;
+        }
+        .action-btn:hover, .action-btn:focus, .action-btn:active {
+            background-color: #E6BC00;
+            border-color: #E6BC00;
+            color: #000000;
+        }
+        .loading {
+            font-size: 24px;
+            color: #FED000;
+        }
+        .news-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        .news-summary {
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+        .news-image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+            max-height: 300px;
+            overflow: hidden;
+        }
+        .news-image {
+            max-width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+        }
+        #categories {
+            position: sticky;
+            top: 70px;
+            background-color: #ffffff;
+            z-index: 1000;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Nuggets Logo" class="logo">
+                <span class="app-name">nuggets.ai</span>
+            </div>
+            <div class="search-container">
+                <button class="btn search-btn" onclick="toggleSearch()">
+                    <input type="text" id="search-input" placeholder="Search for news articles..." style="display: none;">
+                    <i class="fas fa-search"></i>
+                    <span>Search for news articles...</span>
+                </button>
+            </div>
+        </div>
+        <div id="categories" class="mb-4">
+            {% for category in categories %}
+            <button class="btn category-btn" onclick="loadNews('{{ category.lower() }}')">{{ category }}</button>
+            {% endfor %}
+        </div>
+        <div id="news-container" class="news-card">
+            <div id="loading" class="loading">
+                <i class="fas fa-spinner fa-spin"></i> Fetching news...
+            </div>
+            <div id="news-content" style="display: none;">
+                <div class="news-image-container">
+                    <img id="news-image" src="" alt="Article image" class="news-image">
+                </div>
+                <h2 id="news-title" class="news-title"></h2>
+                <p id="news-summary" class="news-summary"></p>
+                <div class="d-flex justify-content-between">
+                    <a id="news-link" href="#" target="_blank" class="btn action-btn">Read more</a>
+                    <button id="next-btn" class="btn action-btn" onclick="nextArticle()">Next &gt;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentArticles = [];
+        let currentIndex = 0;
+
+        async function loadNews(category) {
+            showLoading();
+            try {
+                const response = await fetch(`/api/news/${category}`);
+                const data = await response.json();
+                currentArticles = data;
+                currentIndex = 0;
+                if (currentArticles.length > 0) {
+                    displayArticle();
+                } else {
+                    showError('No news articles found for this category.');
+                }
+            } catch (error) {
+                showError('Error fetching news. Please try again.');
+            }
+        }
+
+        async function searchNews() {
+            const query = document.getElementById('search-input').value;
+            if (!query) return;
+
+            showLoading();
+            try {
+                const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+                const data = await response.json();
+                currentArticles = data;
+                currentIndex = 0;
+                if (currentArticles.length > 0) {
+                    displayArticle();
+                } else {
+                    showError('No news articles found for your search.');
+                }
+            } catch (error) {
+                showError('Error searching for news. Please try again.');
+            }
+        }
+
+        function displayArticle() {
+            const article = currentArticles[currentIndex];
+            document.getElementById('news-title').textContent = article.title;
+            document.getElementById('news-summary').textContent = article.summary;
+            document.getElementById('news-link').href = article.url;
+            
+            const imageElement = document.getElementById('news-image');
+            if (article.image_url) {
+                imageElement.src = article.image_url;
+                imageElement.style.display = 'block';
+            } else {
+                imageElement.style.display = 'none';
+            }
+            
+            hideLoading();
+        }
+
+        function nextArticle() {
+            currentIndex = (currentIndex + 1) % currentArticles.length;
+            displayArticle();
+        }
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('news-content').style.display = 'none';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('news-content').style.display = 'block';
+        }
+
+        function showError(message) {
+            document.getElementById('news-title').textContent = 'Error';
+            document.getElementById('news-summary').textContent = message;
+            hideLoading();
+        }
+
+        function toggleSearch() {
+            const searchBtn = document.querySelector('.search-btn');
+            const searchInput = document.getElementById('search-input');
+            const searchText = searchBtn.querySelector('span');
+            
+            if (searchInput.style.display === 'none') {
+                searchInput.style.display = 'block';
+                searchText.style.display = 'none';
+                searchInput.focus();
+            } else {
+                if (searchInput.value.trim() !== '') {
+                    searchNews();
+                } else {
+                    searchInput.style.display = 'none';
+                    searchText.style.display = 'inline';
+                }
+            }
+        }
+
+        async function searchNews() {
+            const query = document.getElementById('search-input').value.trim();
+            if (!query) return;
+
+            showLoading();
+            try {
+                const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+                const data = await response.json();
+                currentArticles = data;
+                currentIndex = 0;
+                if (currentArticles.length > 0) {
+                    displayArticle();
+                } else {
+                    showError('No news articles found for your search.');
+                }
+            } catch (error) {
+                showError('Error searching for news. Please try again.');
+            }
+        }
+
+// Add event listener for Enter key in search input
+document.getElementById('search-input').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        searchNews();
+    }
+});
+
+        // Load news from the first category by default
+        window.onload = function() {
+            const firstCategory = '{{ categories[0].lower() }}';
+            loadNews(firstCategory);
+        };
+    </script>
+</body>
+</html>
+   
