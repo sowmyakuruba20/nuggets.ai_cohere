@@ -3,7 +3,7 @@
 
 ## Project Overview
 
-Nuggets is a web application that aggregates and summarizes news articles from various categories. It uses the News API to fetch current news and employs the Cohere AI model to generate concise summaries. The application provides an intuitive interface for users to browse news by category or search for specific topics.
+Nuggets is a web application aggregating and summarizing news articles from various categories. It uses the News API to fetch current news and employs the Cohere AI model to generate concise summaries. The application provides an intuitive interface for users to browse news by category or search for specific topics.
 
 ## Features
 
@@ -33,7 +33,6 @@ Ensure you have the following installed:
 
 ```sh
 git clone https://github.com/sowmyakuruba20/nuggets.ai_cohere.git
-cd nuggets
 ```
 ### Create a Virtual Environment
 ```sh
@@ -70,7 +69,8 @@ python news_app.py
 Contributions to Nuggets are welcome! Please feel free to submit a Pull Request.
 
 ## Video Demonstration
-Here is a video demonstration of the application in action: 
+Here is a video demonstration of the application in action:
+https://github.com/sowmyakuruba20/nuggets.ai_cohere/assets/131414180/ff7af6f1-0966-4fb2-b479-07c60d603177
 
 ### License
 This project is licensed under the MIT License - see the LICENSE.md file for details.
