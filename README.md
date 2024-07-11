@@ -1,6 +1,6 @@
 # nuggets.ai
 ## An AI Powered News Application using Cohere.ai 
-
+![screenshot](nuggets.png)
 ## Project Overview
 
 Nuggets is a web application aggregating and summarizing news articles from various categories. It uses the News API to fetch current news and employs the Cohere AI model to generate concise summaries. The application provides an intuitive interface for users to browse news by category or search for specific topics.
